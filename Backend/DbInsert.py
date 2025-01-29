@@ -87,14 +87,14 @@ def upload_csv():
 
             # Insert data into the database
             for _, row in data.iterrows():
-                name = row.get('name')
-                email = row.get('email')
-                mobile = row.get('mobile')
-                location = row.get('location')
+                name = row.get('name') if pd.notna(row.get('name')) else "name not found"
+                email = row.get('email') if pd.notna(row.get('email')) else "email not found"
+                mobile = row.get('mobile') if pd.notna(row.get('mobile')) else "NA"
+                location = row.get('location') if pd.notna(row.get('location')) else "location not found"
 
                 # Ensure all fields are present
-                if not all([name, email, mobile, location]):
-                    continue
+                #if not all([name, email, mobile, location]):
+                   # continue
                 query = """
                 INSERT INTO info (name, email, mobile, location) 
                 VALUES (%s, %s, %s, %s)

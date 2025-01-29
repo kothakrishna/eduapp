@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import "./Dashboard.css";
-import micIcon from "C:/React1/my-app/src/mic-icon.png"; // Ensure you have a microphone icon image in the same directory
+import micIcon from "C:/Users/krish/OneDrive/Desktop/git1/eduapp/my-app/src/mic-icon.png"; // Ensure you have a microphone icon image in the same directory
 import ChatOllama from "../ChatOllama/ChatOllama";
 
 const Dashboard = () => {
