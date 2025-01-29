@@ -1,80 +1,3 @@
-'''from flask import Flask, request, jsonify
-from flask_cors import CORS
-import mysql.connector
-import csv
-import os
-
-app = Flask(__name__)
-CORS(app)
-
-# Configure MySQL
-db = mysql.connector.connect(
-    host="localhost",
-    user="root",
-    password="krishna666",
-    database="rubix"
-)
-
-cursor = db.cursor()
-
-UPLOAD_FOLDER = 'uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# API: Insert data manually
-@app.route('/insert', methods=['POST'])
-def insert_data():
-    data = request.json
-    name = data['name']
-    email = data['email']
-    mobile = data['mobile']
-    location = data['location']
-
-    try:
-        query = "INSERT INTO info (name, email, mobile, location) VALUES (%s, %s, %s, %s)"
-        cursor.execute(query, (name, email, mobile, location))
-        db.commit()
-        cursor.close()
-        return jsonify({'message': 'Data inserted successfully'}), 200
-    except Exception as e:
-        print(f"Error inserting data: {e}")
-        return jsonify({'error': str(e)}), 500
-
-# API: Handle CSV uploads
-@app.route('/upload', methods=['POST'])
-def upload_csv():
-    if 'file' not in request.files:
-        return jsonify({'error': 'No file part'}), 400
-
-    file = request.files['file']
-
-    if file.filename == '':
-        return jsonify({'error': 'No selected file'}), 400
-
-    if not file.filename.endswith('.csv'):
-        return jsonify({'error': 'File must be a CSV'}), 400
-
-    try:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-        file.save(file_path)
-
-        with open(file_path, mode='r') as csvfile:
-            csv_reader = csv.DictReader(csvfile)
-            query = "INSERT INTO info (name, email, mobile, location) VALUES (%s, %s, %s, %s)"
-            for row in csv_reader:
-                cursor.execute(query, (row['name'], row['email'], row['mobile'], row['location']))
-            db.commit()
-            cursor.close()
-
-        os.remove(file_path)  # Delete the file after processing
-        return jsonify({'message': 'CSV data inserted successfully'}), 200
-    except Exception as e:
-        print(f"Error inserting data: {e}")
-        return jsonify({'error': str(e)}), 500
-
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)'''
-
 import os
 from pyexpat import model
 import pandas as pd
@@ -97,11 +20,10 @@ model = genai.GenerativeModel("gemini-1.5-flash")
 # MySQL Configuration
 try:
     db = mysql.connector.connect(
-        host="https://test-databae.c96euqy6qkbe.eu-north-1.rds.amazonaws.com",
-        port=3306,
-        user="admin",
-        password="admin1234*",
-        database="test-databae"
+        host="localhost",
+        user="root",
+        password="krishna666",
+        database="rubix"
     )
 except mysql.connector.Error as err:
     print(f"Error: {err}")
