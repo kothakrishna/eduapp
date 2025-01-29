@@ -1,0 +1,120 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #fff;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .create-account-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .create-account-box {
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .create-account-box h2 {
+    margin-bottom: 10px;
+    color: #00ffcc;
+  }
+  
+  .create-account-box p {
+    margin-bottom: 20px;
+    font-size: 14px;
+    color: #aaa;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .row {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .row input {
+    flex: 1;
+  }
+  
+  input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background: #222;
+    color: #fff;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #00ffcc;
+    box-shadow: 0 0 5px #00ffcc;
+  }
+  
+  .checkbox {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+  
+  .checkbox input {
+    margin-right: 10px;
+    
+  }
+  
+  .checkbox a {
+    color: #00ffcc;
+    text-decoration: none;
+  }
+  
+  .checkbox a:hover {
+    text-decoration: underline;
+  }
+  
+  .create-btn {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background: linear-gradient(to right, #00ffcc, #00ff80);
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .create-btn:hover {
+    background: linear-gradient(to right, #00ff80, #00ffcc);
+  }
+  
+  .already-account {
+    margin-top: 20px;
+    font-size: 14px;
+  }
+  
+  .already-account a {
+    color: #00ffcc;
+    text-decoration: none;
+  }
+  
+  .already-account a:hover {
+    text-decoration: underline;
+  }
+  

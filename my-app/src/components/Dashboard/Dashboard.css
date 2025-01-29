@@ -1,0 +1,78 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: #f0f0f0;
+    color: #333;
+    font-family: Arial, sans-serif;
+    position: relative;
+    padding: 20px;
+  }
+  
+  .logout-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #ff4d4d;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .logout-btn:hover {
+    background-color: #ff1a1a;
+  }
+  
+  .welcome-section {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 2px;
+  }
+  
+  .welcome-section h2 {
+    font-size: 2.5rem;
+    color: #00e6e6;
+  }
+  
+  .welcome-section p {
+    font-size: 1.2rem;
+    color: #555;
+  }
+  
+  .student-dashboard {
+    display: flex;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .left-panel {
+    width: 25%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e0e0;
+  }
+  
+  .right-panel {
+    width: 75%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    overflow-y: auto; /* Allow vertical scrolling if content overflows */
+  }
+  
+  .mic-icon {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+  }
+  
+  .mic-icon:hover {
+    opacity: 0.8;
+  }

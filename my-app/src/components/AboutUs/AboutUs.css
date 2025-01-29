@@ -1,0 +1,89 @@
+/* General Section Styling */
+.about-us-section {
+    background-color: #000;
+    color: #fff;
+    padding: 2rem;
+    text-align: center;
+    font-family: "Arial", sans-serif;
+  }
+  
+  .section-title {
+    font-size: 2.5rem;
+    color: #00e6e6;
+    text-shadow: 0 0 10px rgba(0, 230, 230, 0.7);
+    margin-bottom: 1rem;
+  }
+  
+  .section-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+    color: #ccc;
+  }
+  
+  /* Info Cards */
+  .info-cards-container {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2rem;
+  }
+  
+  .info-card {
+    background-color: #111;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #00e6e6;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .info-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .info-card p {
+    font-size: 0.9rem;
+    color: #bbb;
+  }
+  
+  .info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 230, 230, 0.5);
+  }
+  
+  /* Stats Section */
+  .stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+  }
+  
+  .stat-box {
+    text-align: center;
+    background-color: #111;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    color: #00e6e6;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .stat-box h2 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-box p {
+    font-size: 1rem;
+    color: #bbb;
+  }
+  
+  .stat-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 230, 230, 0.5);
+  }
+  
