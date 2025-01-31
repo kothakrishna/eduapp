@@ -43,7 +43,7 @@ const ChatOllama = () => {
         // Append Llama's response to chat log
         setChatLog((prevChatLog) => [
           ...prevChatLog,
-          { type: 'llama', message: `Llama: ${json.message}`, audio: json.audio },
+          { type: 'llama', message: `mentor: ${json.message}`, audio: json.audio },
         ]);
 
         // Scroll to the bottom of the chat log

@@ -7,6 +7,7 @@ import mysql.connector
 import pytesseract
 import json
 from PIL import Image
+from PIL import ImageOps
 import google.generativeai as genai
 
 app = Flask(__name__)
@@ -61,6 +62,29 @@ def insert_data():
         print(f"Error inserting data: {e}")
         return jsonify({'error': str(e)}), 500
 
+COLUMN_MAPPINGS = {
+    'name': ['name', 'full name', 'employee name', 'candidate name'],
+    'email': ['email', 'email address', 'contact email'],
+    'location': ['location', 'city', 'place'],
+    'mobile': ['mobile', 'phone', 'contact number', 'mobile number']
+}
+
+def standardize_columns(df):
+    """
+    Map column names in the DataFrame to standard column names.
+    """
+    column_mapping = {}
+    for standard_col, possible_names in COLUMN_MAPPINGS.items():
+        for possible_name in possible_names:
+            for col in df.columns:
+                if col.strip().lower() == possible_name.lower():
+                    column_mapping[col] = standard_col
+                    break  # Stop searching if a match is found
+    
+    # Rename columns using the mapping
+    df.rename(columns=column_mapping, inplace=True)
+    return df
+
 
 @app.route('/upload', methods=['POST'])
 def upload_csv():
@@ -84,7 +108,10 @@ def upload_csv():
             elif filename.endswith('.xlsx'):
                 # Process Excel file
                 data = pd.read_excel(file_path)
+                print(data)
 
+            # Standardize column names
+            data = standardize_columns(data)
             # Insert data into the database
             for _, row in data.iterrows():
                 name = row.get('name') if pd.notna(row.get('name')) else "name not found"
@@ -113,10 +140,12 @@ def upload_csv():
 
 def extract_text_from_image(file):
     image = Image.open(file)
-    return pytesseract.image_to_string(image)
+    gray_image = ImageOps.grayscale(image)
+    return pytesseract.image_to_string(gray_image)
 
 # Function to insert extracted data into the database
 def insert_into_db(data):
+    print("data", data)
     try:
         # Insert query
         cursor = db.cursor()
@@ -147,34 +176,83 @@ def upload_file():
 
             # Prepare prompt for Gemini API
             prompt = (
-                "Extract details like name, email, phone, and location from the following text. "
-                "Return the values in key-value format as JSON without additional text.in the response dont mention json"
+                "Extract details like name, email, phone, and location from the following text. without additional text. provide output as list of dictonaries"
                 f"Text: {text}"
             )
             
             response = model.generate_content(prompt)
             raw_response = response.text.strip()  # Get raw response text
+            #print("raw " ,raw_response)
+            data=[raw_response]
+            df = pd.DataFrame(data)
+            json_output = df.to_json(orient="records", indent=4)
+            parsed_data = json.loads(json_output)
+            inner_json_str = parsed_data[0]["0"]
+            cleaned_json_str = inner_json_str.replace("```json\n", "").replace("\n```", "").replace("'", '"')
 
-            try:
+            # Convert it into valid JSON
+            final_json = json.loads(cleaned_json_str)
+            print(final_json)
+            for record in final_json:
+                name = record.get("name")
+                email = record.get("email")
+                phone = record.get("phone")
+                location = record.get("location")
+                data = {
+                    "name": name,
+                    "email": email,
+                    "mobile": phone,
+                    "location": location
+                }
+                insert_into_db(data)
+            '''try:
                 # Parse the response as JSON
                 start_index=raw_response.find("{")
                 end_index=raw_response.rfind("}")
                 json_response=raw_response[start_index:end_index+1]
-                extracted_data = json.loads(json_response)
+                json_output = json.loads(json_response)
             except json.JSONDecodeError:
                 print("Raw response:", raw_response)
                 print(f"Error inserting data: {e}")
                 return jsonify({"error": "Failed to parse API response", "raw_response": raw_response}), 500
 
             # Insert the extracted data into the database
-            for name,details in extracted_data.items():
-                data={
-                    "name":name,
-                    "email":details.get("email",""),
-                    "mobile":details.get("phone",""),
-                    "location":details.get("location","")
-                }
-                insert_into_db(data)
+            if 'names' in json_output and 'emails' in json_output and 'phones' in json_output and 'locations' in json_output:
+                names = json_output['names']
+                emails = json_output['emails']
+                phones = json_output['phones']
+                locations = json_output['locations']
+    
+                for i in range(len(names)):
+                    data = {
+                        "name": names[i] if i < len(names) else None,
+                        "email": emails[i] if i < len(emails) else None,
+                        "mobile": phones[i] if i < len(phones) else None,
+                        "location": locations[i] if i < len(locations) else None
+                    }
+                    insert_into_db(data)
+            else:
+                    # Handle the case where the response is in the original format
+                if 'contacts' in json_output:
+                    contacts = json_output['contacts']
+                    for contact in contacts:
+                        data = {
+                            "name": contact.get("name", None),
+                            "email": contact.get("email", None),
+                            "mobile": contact.get("phone", None),
+                            "location": contact.get("location", None)
+                        }
+                        insert_into_db(data)
+                else:
+                    for name, details in json_output.items():
+                        data = {
+                            "name": name,
+                            "email": details.get("email", None),
+                            "mobile": details.get("phone", None),
+                            "location": details.get("location", None)
+                        }
+                        insert_into_db(data)'''
+
             return jsonify({"message": "Data processed and inserted into database"}), 200
     except Exception as e:
         print(f"Error inserting data: {e}")
