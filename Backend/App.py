@@ -9,17 +9,6 @@ import mysql.connector
 import ollama
 import pyttsx3
 
-import nltk
-nltk.download('punkt_tab')
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-from transformers import pipeline
-import textwrap
-from nltk.tokenize import sent_tokenize
-import PyPDF2
-import numpy as np
-
-
 
 app = Flask(__name__)
 CORS(app)
@@ -42,130 +31,6 @@ db = mysql.connector.connect(
 
 cursor = db.cursor()
 
-class ImprovedPDFRAGSystem:
-    def __init__(self, pdf_path, chunk_size=8, chunk_overlap=4):
-        """
-        Initialize the RAG system with a PDF document
-
-        Args:
-            pdf_path (str): Path to the PDF file
-            chunk_size (int): Number of sentences per chunk
-            chunk_overlap (int): Number of sentences to overlap between chunks
-        """
-        self.pdf_path = pdf_path
-        self.chunk_size = chunk_size
-        self.chunk_overlap = chunk_overlap
-
-        # Initialize models
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
-        self.qa_model = pipeline(
-            'question-answering',
-            model='distilbert-base-cased-distilled-squad',
-            device=-1,
-            handle_long_input=True
-        )
-
-        # Load and process the PDF
-        self.chunks = self._process_pdf()
-        self.chunk_embeddings = self._generate_embeddings()
-
-    def _clean_text(self, text):
-        """Clean the extracted text"""
-        text = " ".join(text.split())
-        text = text.replace("  ", " ")
-        text = text.replace(" .", ".")
-        text = text.replace(" ,", ",")
-        text = text.replace(" !", "!")
-        text = text.replace(" ?", "?")
-        return text
-
-    def _process_pdf(self):
-        """Extract text from PDF and split into overlapping chunks by sentences"""
-        reader = PyPDF2.PdfReader(self.pdf_path)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text() + " "
-
-        text = self._clean_text(text)
-        sentences = sent_tokenize(text)
-
-        chunks = []
-        for i in range(0, len(sentences), self.chunk_size - self.chunk_overlap):
-            chunk = sentences[i:i + self.chunk_size]
-            if chunk:
-                chunk_text = " ".join(chunk).strip()
-                chunks.append(chunk_text)
-
-        return chunks
-
-    def _generate_embeddings(self):
-        """Generate embeddings for all chunks"""
-        return self.embedding_model.encode(self.chunks)
-
-    def _get_relevant_chunks(self, query, top_k=3):
-        """Find the most relevant chunks for a given query"""
-        if any(word in query.lower() for word in ['contrast', 'difference', 'compare', 'versus', 'vs']):
-            terms = query.lower().split('between')[-1].split('and')
-            if len(terms) >= 2:
-                query_embedding1 = self.embedding_model.encode([terms[0]])[0]
-                query_embedding2 = self.embedding_model.encode([terms[1]])[0]
-                query_embedding = (query_embedding1 + query_embedding2) / 2
-            else:
-                query_embedding = self.embedding_model.encode([query])[0]
-        else:
-            query_embedding = self.embedding_model.encode([query])[0]
-
-        similarities = cosine_similarity([query_embedding], self.chunk_embeddings)[0]
-
-        top_indices = np.argsort(similarities)[-top_k:][::-1]
-        top_similarities = similarities[top_indices]
-
-        threshold = 0.25
-        filtered_chunks = []
-
-        for idx, sim in zip(top_indices, top_similarities):
-            if sim >= threshold:
-                filtered_chunks.append(self.chunks[idx])
-
-        return filtered_chunks
-
-    def answer_question(self, query):
-        """Answer a question using the RAG system"""
-        relevant_chunks = self._get_relevant_chunks(query)
-
-        if not relevant_chunks:
-            return {
-                'answer': "I couldn't find relevant information to answer this question.",
-                'confidence': 0.0,
-                'context': "No relevant context found."
-            }
-
-        context = " ".join(relevant_chunks)
-
-        if any(word in query.lower() for word in ['contrast', 'difference', 'compare', 'versus', 'vs']):
-            try:
-                response = self.qa_model(
-                    question=query,
-                    context=context,
-                    max_answer_len=150,
-                    handle_impossible_answer=True
-                )
-            except Exception as e:
-                print(f"Error in QA model: {e}")
-                response = {'answer': "Error processing the question", 'score': 0.0}
-        else:
-            response = self.qa_model(
-                question=query,
-                context=context,
-                max_answer_len=100,
-                handle_impossible_answer=True
-            )
-
-        return {
-            'answer': response['answer'],
-            'confidence': response['score'],
-            'context': textwrap.fill(context, width=100)
-        }
 
 @app.route("/create_account", methods=["POST"])
 def create_account():
@@ -285,27 +150,5 @@ def chat():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-@app.route('/answer', methods=['POST'])
-def answer_endpoint():
-    """Endpoint to answer questions"""
-    try:
-        data = request.json
-        question = data.get('question', '')
-        pdf_path = data.get('pdf_path', 'ghost-riders-byrnes-obooko.pdf')
-
-        if not question:
-            return jsonify({'error': 'No question provided'}), 400
-
-        rag_system = ImprovedPDFRAGSystem(pdf_path)
-        result = rag_system.answer_question(question)
-        print(f"Answer: {result['answer']}")
-        print(f"Confidence: {result['confidence']:.2f}")
-        print(f"Context: {result['context']}")
-
-        #return jsonify(result)
-        return result['context']
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
 if __name__ == "__main__":
     app.run(debug=True)
