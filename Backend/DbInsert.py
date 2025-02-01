@@ -1,3 +1,4 @@
+import io
 import os
 from pyexpat import model
 import pandas as pd
@@ -9,6 +10,7 @@ import json
 from PIL import Image
 from PIL import ImageOps
 import google.generativeai as genai
+from flask import send_file
 
 app = Flask(__name__)
 CORS(app)
@@ -161,6 +163,47 @@ def insert_into_db(data):
     except Exception as e:
         print(f"Error inserting data: {e}")
         raise Exception(f"Database error: {str(e)}")
+
+@app.route('/view', methods=['GET'])
+def view_data():
+    try:
+        query = "SELECT * FROM info"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        data = [dict(zip(columns, row)) for row in rows]
+        return jsonify(data), 200
+    except Exception as e:
+        print(f"Error fetching data: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/download', methods=['GET'])
+def download_data():
+    try:
+        query = "SELECT * FROM info"
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        columns = [desc[0] for desc in cursor.description]
+        df = pd.DataFrame(rows, columns=columns)
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='Info')
+        output.seek(0)
+        return send_file(output, download_name='info.xlsx', as_attachment=True)
+    except Exception as e:
+        print(f"Error downloading data: {e}")
+        return jsonify({'error': str(e)}), 500
+    
+@app.route('/delete/<int:id>', methods=['DELETE'])
+def delete_data(id):
+    try:
+        query = "DELETE FROM info WHERE id = %s"
+        cursor.execute(query, (id,))
+        db.commit()
+        return jsonify({'message': 'Record deleted successfully'}), 200
+    except Exception as e:
+        print(f"Error deleting data: {e}")
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/uploadimage', methods=['POST'])
 def upload_file():

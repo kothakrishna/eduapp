@@ -8,6 +8,7 @@ const Insert = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+  const [viewData, setViewData] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -72,6 +73,41 @@ const Insert = () => {
     }
   };
 
+  const handleView = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/view');
+      setViewData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      alert('Error fetching data');
+    }
+  };
+  
+  const handleDownload = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/download', { responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'info.xlsx');
+      document.body.appendChild(link);
+      link.click();
+    } catch (error) {
+      console.error('Error downloading data:', error);
+      alert('Error downloading data');
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/delete/${id}`);
+      alert('Record deleted successfully!');
+      handleView(); // Refresh the view after deletion
+    } catch (error) {
+      console.error('Error deleting data:', error);
+      alert('Error deleting data');
+    }
+  };
 
   return (
     <div className="container">
@@ -122,6 +158,35 @@ const Insert = () => {
         <input type="file" accept=".png" onChange={handleImageChange} required />
         <button type="submit">Submit image</button>
       </form>
+
+      <button onClick={handleView}>View</button>
+      <button onClick={handleDownload}>Download as Excel</button>
+      {viewData.length > 0 && (
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+          <tbody>
+            {viewData.map((item, index) => (
+              <tr key={index}>
+                <td>{item.name}</td>
+                <td>{item.email}</td>
+                <td>{item.mobile}</td>
+                <td>{item.location}</td>
+                <td>
+                  <button onClick={() => handleDelete(item.id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
     </div>
   );
 };
