@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Insert.css';
 
@@ -9,6 +9,12 @@ const Insert = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [viewData, setViewData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    handleView(page);
+  }, [page]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -75,8 +81,9 @@ const Insert = () => {
 
   const handleView = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/view');
+      const response = await axios.get(`http://localhost:5000/view?page=${page}&limit=10`);
       setViewData(response.data);
+      setHasMore(response.data.length === 10);
     } catch (error) {
       console.error('Error fetching data:', error);
       alert('Error fetching data');
@@ -108,6 +115,17 @@ const Insert = () => {
       alert('Error deleting data');
     }
   };
+
+  const handleNextPage = () => {
+    setPage(page + 1);
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
+
 
   return (
     <div className="container">
@@ -162,6 +180,7 @@ const Insert = () => {
       <button onClick={handleView}>View</button>
       <button onClick={handleDownload}>Download as Excel</button>
       {viewData.length > 0 && (
+        <div>
         <table>
           <thead>
             <tr>
@@ -169,6 +188,7 @@ const Insert = () => {
               <th>Email</th>
               <th>Mobile</th>
               <th>Location</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -185,8 +205,12 @@ const Insert = () => {
             ))}
           </tbody>
         </table>
+        <div className="pagination">
+            <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
+            <button onClick={handleNextPage} disabled={!hasMore}>Next</button>
+          </div>
+        </div> 
       )}
-
     </div>
   );
 };

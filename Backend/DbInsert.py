@@ -167,8 +167,11 @@ def insert_into_db(data):
 @app.route('/view', methods=['GET'])
 def view_data():
     try:
-        query = "SELECT * FROM info"
-        cursor.execute(query)
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 10))
+        offset = (page - 1) * limit
+        query = "SELECT * FROM info LIMIT %s OFFSET %s"
+        cursor.execute(query,(limit, offset))
         rows = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
         data = [dict(zip(columns, row)) for row in rows]
