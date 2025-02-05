@@ -11,6 +11,7 @@ const Insert = () => {
   const [viewData, setViewData] = useState([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [emailExists, setEmailExists] = useState(false);
 
   useEffect(() => {
     handleView(page);
@@ -21,13 +22,39 @@ const Insert = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const checkEmailExists = async (email) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/check_email?email=${email}`);
+      setEmailExists(response.data.exists);
+      if (response.data.exists) {
+        setError('Email already exists');
+      } else {
+        setError(null);
+      }
+    } catch (error) {
+      setError('Error checking email');
+    }
+  };
+
+  const handleEmailBlur = (e) => {
+    const email = e.target.value;
+    checkEmailExists(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (emailExists) {
+      alert('Email already exists');
+      return;
+    }
     try {
       await axios.post('http://localhost:5000/insert', formData);
       alert('Data inserted successfully!');
+      setError(null);
     } catch (error) {
-      alert('Error inserting data');
+      const errorMessage = error.response?.data?.error || 'Error inserting data';
+      alert(errorMessage);
+      setError(errorMessage);
     }
   };
 
@@ -145,8 +172,10 @@ const Insert = () => {
           placeholder="Email"
           value={formData.email}
           onChange={handleInputChange}
+          onBlur={handleEmailBlur}
           required
         />
+        {emailExists && <div className="error">Email already exists</div>}
         <input
           type="text"
           name="mobile"

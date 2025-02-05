@@ -53,7 +53,7 @@ def insert_data():
     email = data['email']
     mobile = data['mobile']
     location = data['location']
-
+    cursor = db.cursor()
     try:
         query = "INSERT INTO info (name, email, mobile, location) VALUES (%s, %s, %s, %s)"
         cursor.execute(query, (name, email, mobile, location))
@@ -147,6 +147,7 @@ def extract_text_from_image(file):
 
 # Function to insert extracted data into the database
 def insert_into_db(data):
+    cursor = db.cursor()
     print("data", data)
     try:
         # Insert query
@@ -170,7 +171,7 @@ def view_data():
         page = int(request.args.get('page', 1))
         limit = int(request.args.get('limit', 10))
         offset = (page - 1) * limit
-        query = "SELECT * FROM info LIMIT %s OFFSET %s"
+        query = "SELECT * FROM info ORDER BY id DESC LIMIT %s OFFSET %s"
         cursor.execute(query,(limit, offset))
         rows = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
@@ -179,6 +180,21 @@ def view_data():
     except Exception as e:
         print(f"Error fetching data: {e}")
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/check_email', methods=['GET'])
+def check_email():
+    email = request.args.get('email')
+    cursor = db.cursor()
+    try:
+        query = "SELECT COUNT(*) FROM info WHERE email = %s"
+        cursor.execute(query, (email,))
+        count = cursor.fetchone()[0]
+        return jsonify({'exists': count > 0}), 200
+    except Exception as e:
+        print(f"Error checking email: {e}")
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
 
 @app.route('/download', methods=['GET'])
 def download_data():
