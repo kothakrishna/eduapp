@@ -12,9 +12,11 @@ const Insert = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [emailExists, setEmailExists] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     handleView(page);
+    fetchTotalCount();
   }, [page]);
 
   const handleInputChange = (e) => {
@@ -51,6 +53,8 @@ const Insert = () => {
       await axios.post('http://localhost:5000/insert', formData);
       alert('Data inserted successfully!');
       setError(null);
+      fetchTotalCount();
+      handleView(page);
     } catch (error) {
       const errorMessage = error.response?.data?.error || 'Error inserting data';
       alert(errorMessage);
@@ -72,6 +76,8 @@ const Insert = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       alert('CSV data uploaded successfully!');
+      fetchTotalCount();
+      handleView(page);
     } catch (error) {
       alert('Error uploading CSV file');
     }
@@ -98,8 +104,11 @@ const Insert = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      alert('Image uploaded successfully!');
       setResponse(res.data.response); // Access the response text
       setError(null);
+      fetchTotalCount();
+      handleView(page);
     } catch (err) {
       setError(err.response?.data?.error || "Something went wrong!");
       setResponse(null);
@@ -117,6 +126,17 @@ const Insert = () => {
     }
   };
   
+  const fetchTotalCount = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/count');
+      setTotalCount(response.data.count);
+    } catch (error) {
+      const errorMessage = error.response?.data?.error || 'Error fetching total count';
+      alert(errorMessage);
+      setError(errorMessage);
+    }
+  };
+
   const handleDownload = async () => {
     try {
       const response = await axios.get('http://localhost:5000/download', { responseType: 'blob' });
@@ -136,7 +156,8 @@ const Insert = () => {
     try {
       await axios.delete(`http://localhost:5000/delete/${id}`);
       alert('Record deleted successfully!');
-      handleView(); // Refresh the view after deletion
+      handleView(page); // Refresh the view after deletion
+      alert('Image uploaded successfully!');
     } catch (error) {
       console.error('Error deleting data:', error);
       alert('Error deleting data');
@@ -157,6 +178,7 @@ const Insert = () => {
   return (
     <div className="container">
       <h1>Data Entry</h1>
+      <p>Total Records: {totalCount}</p>
       <form onSubmit={handleSubmit}>
         <input
           type="text"

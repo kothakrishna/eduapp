@@ -87,6 +87,19 @@ def standardize_columns(df):
     df.rename(columns=column_mapping, inplace=True)
     return df
 
+@app.route('/count', methods=['GET'])
+def count_data():
+    cursor = db.cursor()
+    try:
+        query = "SELECT COUNT(*) FROM info"
+        cursor.execute(query)
+        count = cursor.fetchone()[0]
+        return jsonify({'count': count}), 200
+    except Exception as e:
+        print(f"Error fetching count: {e}")
+        return jsonify({'error': str(e)}), 500
+    finally:
+        cursor.close()
 
 @app.route('/upload', methods=['POST'])
 def upload_csv():
