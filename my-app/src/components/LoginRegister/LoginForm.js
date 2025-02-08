@@ -28,7 +28,7 @@ const LoginForm = () => {
 
       const data = await response.json();
       if (data.success) {
-        navigate("/Dashboard", { state: data }); // Navigate to the dashboard page with login data
+        navigate("/Dashboard1", { state: data }); // Navigate to the dashboard page with login data
       } else {
         setError(data.message); // Display error message
       }

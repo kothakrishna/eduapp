@@ -11,6 +11,7 @@ const CreateAccount = () => {
     studentName: "",
     studentClass: "",
     schoolName: "",
+    gender: "",
   });
 
   const navigate = useNavigate();
@@ -92,6 +93,16 @@ const CreateAccount = () => {
             onChange={handleChange}
             required
           />
+          <select
+          name="gender"
+          value={formData.gender}
+          onChange={handleChange}
+          required
+          >
+          <option value="" disabled>Select gender</option>
+          <option value="Boy">Boy</option>
+          <option value="Girl">Girl</option>
+          </select>
           <input
             type="text"
             name="studentClass"

@@ -42,6 +42,7 @@ def create_account():
     student_name = data["studentName"]
     student_class = data["studentClass"]
     school_name = data["schoolName"]
+    gender=data["gender"]
 
     # Generate usernames
     cursor.execute("SELECT COUNT(*) FROM users WHERE role='parent'")
@@ -63,8 +64,8 @@ def create_account():
     parent_id = cursor.lastrowid
 
     cursor.execute(
-        "INSERT INTO users (username, password, name, role, parent_id, class, school) VALUES (%s, %s, %s, 'student', %s, %s, %s)",
-        (student_username, password, student_name, parent_id, student_class, school_name)
+        "INSERT INTO users (username, password, name,role, parent_id, class, school, gender) VALUES (%s, %s, %s, 'student', %s, %s, %s, %s)",
+        (student_username, password, student_name, parent_id, student_class, school_name, gender)
     )
     db.commit()
 

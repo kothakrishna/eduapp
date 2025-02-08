@@ -157,7 +157,6 @@ const Insert = () => {
       await axios.delete(`http://localhost:5000/delete/${id}`);
       alert('Record deleted successfully!');
       handleView(page); // Refresh the view after deletion
-      alert('Image uploaded successfully!');
     } catch (error) {
       console.error('Error deleting data:', error);
       alert('Error deleting data');

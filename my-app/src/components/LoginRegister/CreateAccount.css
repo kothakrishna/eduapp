@@ -61,7 +61,16 @@ body {
     background: #222;
     color: #fff;
   }
-  
+  select{
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background: #222;
+    color: #fff;
+  }
+
   input:focus {
     outline: none;
     border-color: #00ffcc;

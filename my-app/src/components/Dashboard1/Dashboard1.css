@@ -1,0 +1,390 @@
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: linear-gradient(-45deg, #ee7752, #f7b7d7, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+
+.header {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.logo-section {
+    animation: slideIn 1s ease-out;
+}
+
+.logo-image {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+
+
+.logo {
+    font-size: 2.8rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, #00ff87, #60efff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 
+        1px -1px 0 #7ef6bc,  
+         1px -1px 0 #4a0000,
+        1px  1px 0 #050346,
+         1px  1px 0 #272301,
+         2px 2px 4px rgba(0,0.5,0,0.1);
+}
+
+
+.company-tag {
+    position: relative;  /* Changed to relative to move with page flow */
+    display: block;      /* Ensure block display */
+    text-align: right;
+    color: white;
+    font-size: 0.9rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    padding: 8px 15px;
+    border-radius: 10px;
+    margin-top: 10px;    /* Space from content above */
+    margin-bottom: 20px; /* Space at bottom of page */
+    transition: all 0.3s ease;
+    width: fit-content;
+    margin-left: auto;   /* Right align the tag */
+    margin-right: 20px;
+}
+
+.company-tag:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.company-tag .icon {
+    font-size: 0.9rem;
+}
+
+.subtitle {
+    color: white;
+    font-size: 1.2rem;
+    margin-top: 5px;
+    opacity: 0.9;
+    margin-left: calc(0.01px + (2.8rem * 0.4)); /* Adjusts left margin based on logo width and first letter */
+    text-align: left;
+    display: block;
+}
+
+.nav-icons {
+    display: flex;
+    gap: 30px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    text-decoration: none;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.nav-item:hover {
+    transform: translateY(-5px);
+}
+
+.nav-icon {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 15px;
+    transition: all 0.3s;
+}
+
+.nav-item:hover .nav-icon {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.progress-section {
+    position: absolute;
+    top: 5px; /* Adjust this value to fine-tune vertical positioning */
+    left: 40px;
+    display: inline-block;
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+.progress-icon {
+    width: auto; /* Changed from fixed width */
+    height: auto; /* Changed from fixed height */
+    font-size: 2rem; /* Match nav-icon size */
+    background: rgba(255, 255, 255, 0.2);
+    padding: 15px;
+    border-radius: 15px;
+    transition: all 0.3s;
+    margin-bottom: 8px;
+}
+
+.progress-section:hover {
+    transform: translateY(-5px);
+}
+
+.progress-section:hover .progress-icon {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+    position: relative;
+    min-height: calc(100vh - 400px); /* Ensure minimum content height */
+}
+
+.ai-assistant {
+    width: 150px; /* Increased from 120px */
+    height: 150px; /* Increased from 120px */
+    margin-bottom: 75px; /* Increased from 40px */
+}
+
+
+
+.menu-container {
+    display: flex;
+    gap: 20px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.menu-button {
+    background: rgba(255, 255, 255, 0.281);
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 15px;
+    padding: 15px 30px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu-button:hover {
+    background: rgba(163, 255, 153, 0.266);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.button-icon {
+    font-size: 1.5rem;
+}
+
+.chat-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    margin-bottom: 40px; /* Add bottom margin for spacing */
+}
+
+.message-input {
+    width: 100%;
+    padding: 15px 60px 15px 20px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.message-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.message-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.message-icons {
+    position: absolute;
+    right: 80px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.message-icon {
+    cursor: pointer;
+    font-size: 1.5rem;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.message-icon:hover {
+    opacity: 1;
+}
+
+.scroll-arrows {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease-out; /* Smooth fade transition */
+    pointer-events: none;
+}
+
+.scroll-arrow {
+    width: 45px;
+    height: 45px;
+    background: rgba(0, 0, 0, 0.3); /* Darker background for better visibility */
+    backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-arrows.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.scroll-arrows.fade-out {
+    opacity: 0;
+}
+
+.scroll-arrow:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+
+
+.send-button {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(45deg, #00ff87, #60efff);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.send-button:hover {
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.send-icon {
+    font-size: 1.5rem;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 20px;
+    }
+
+    .nav-icons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .menu-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .menu-button {
+        width: 90%;
+    }
+    .chat-container {
+        margin-bottom: 30px; /* Adjust spacing on mobile */
+    }
+    .company-tag {
+        margin-right: 10px;
+        font-size: 0.8rem;
+        padding: 6px 12px;
+        margin-top: 30px;
+    }
+
+}

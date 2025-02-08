@@ -13,6 +13,7 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import ChatOllama from "./components/ChatOllama/ChatOllama";
 import QuestionForm from "./components/QuestionForm/QuestionForm";
 import Insert from "./components/DbInsert/Insert";
+import Dashboard1 from "./components/Dashboard1/Dashboard1";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/ChatOllama" element={<ChatOllama/>}/>
         <Route path="/QuestionForm" element={<QuestionForm/>}/>
         <Route path="/Insert" element={<Insert />} />
+        <Route path ="/Dashboard1" element={<Dashboard1/>}/>
       </Routes>
     </BrowserRouter>
   );
