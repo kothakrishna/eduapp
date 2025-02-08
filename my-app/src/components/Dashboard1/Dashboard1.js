@@ -157,10 +157,12 @@ const Dashboard1 = () => {
 
 export default Dashboard1;*/
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import './Dashboard1.css';
+import { useNavigate } from 'react-router-dom';
 
-const Dashboard1 = () => {
+
+const Dashboard1 = ({setIsLoggedIn}) => {
   const [gender, setGender] = useState("");
   const [userInput, setUserInput] = useState('');
   const [chatLog, setChatLog] = useState([]);
@@ -168,6 +170,7 @@ const Dashboard1 = () => {
   const [isListening, setIsListening] = useState(false);
   const chatLogRef = useRef(null);
   const currentlyPlayingAudio = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Simulate fetching gender from login data
@@ -177,6 +180,15 @@ const Dashboard1 = () => {
 
   // Set background color dynamically
   const backgroundColor = gender === "Boy" ? "#23a6d5" : "#f7b7d7";
+
+  const handleLogout = () => {
+    // Clear any stored user data (if any)
+    // For example, you might clear localStorage or any state management store
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("gender");
+    setIsLoggedIn(false);
+    navigate("/LoginForm"); // Redirect to login page
+  };
 
   useEffect(() => {
     // Add click animations to buttons
@@ -339,6 +351,10 @@ const Dashboard1 = () => {
           <div className="nav-item">
             <div className="nav-icon">👶</div>
             Kids
+          </div>
+          <div className="nav-item">
+            <div className="nav-icon" onClick={handleLogout}>🔒</div>
+            Logout
           </div>
         </div>
       </div>

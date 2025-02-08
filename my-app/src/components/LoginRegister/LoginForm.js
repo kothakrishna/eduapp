@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./LoginForm.css";
 import { Navigate, useNavigate } from "react-router-dom";
 
-const LoginForm = () => {
+const LoginForm = ({setIsLoggedIn}) => {
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
@@ -28,6 +28,9 @@ const LoginForm = () => {
 
       const data = await response.json();
       if (data.success) {
+        localStorage.setItem("isLoggedIn", true); // Store login status in localStorage
+        localStorage.setItem("gender",data.gender);
+        setIsLoggedIn(true);
         navigate("/Dashboard1", { state: data }); // Navigate to the dashboard page with login data
       } else {
         setError(data.message); // Display error message

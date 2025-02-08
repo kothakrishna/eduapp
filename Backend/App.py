@@ -91,7 +91,7 @@ def login():
 
     # Authenticate the user using username and password
     cursor.execute(
-        "SELECT id, name, role, parent_id FROM users WHERE username=%s AND password=%s",
+        "SELECT id, name, role, parent_id,gender FROM users WHERE username=%s AND password=%s",
         (username, password)
     )
     user = cursor.fetchone()
@@ -99,7 +99,7 @@ def login():
     if not user:
         return jsonify({"success": False, "message": "Invalid username or password."})
 
-    user_id, user_name, role, parent_id = user
+    user_id, user_name, role, parent_id, gender = user
 
     # Fetch related user based on role
     if role == "parent":
@@ -118,7 +118,8 @@ def login():
         "message": "Login successful.",
         "role": role,
         "user_name": user_name,
-        "related_user": related_user
+        "related_user": related_user,
+        "gender":gender
     })
 
 @app.route('/chat', methods=['POST'])
