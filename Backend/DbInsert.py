@@ -160,7 +160,7 @@ def extract_text_from_image(file):
 
 # Function to insert extracted data into the database
 def insert_into_db(data):
-    cursor = db.cursor()
+    #cursor = db.cursor()
     print("data", data)
     try:
         # Insert query

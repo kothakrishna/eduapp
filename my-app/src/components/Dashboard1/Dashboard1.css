@@ -332,7 +332,7 @@ body {
 
 .send-button {
     position: absolute;
-    right: 30px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     background: linear-gradient(45deg, #00ff87, #60efff);
@@ -356,6 +356,16 @@ body {
     font-size: 1.5rem;
     color: white;
 }
+
+.chat-log {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    background: #f9f9f9;
+  }
 
 @media (max-width: 768px) {
     .header {

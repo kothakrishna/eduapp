@@ -177,7 +177,6 @@ const Insert = () => {
   return (
     <div className="container">
       <h1>Data Entry</h1>
-      <p>Total Records: {totalCount}</p>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -258,8 +257,10 @@ const Insert = () => {
         <div className="pagination">
             <button onClick={handlePreviousPage} disabled={page === 1}>Previous</button>
             <button onClick={handleNextPage} disabled={!hasMore}>Next</button>
+            <p>Total Records: {totalCount}</p>
           </div>
         </div> 
+        
       )}
     </div>
   );
